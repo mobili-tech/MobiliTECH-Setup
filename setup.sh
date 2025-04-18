@@ -5,32 +5,6 @@ echo "Iniciando configuração de ambiente..."
 echo "Atualizando os pacotes do sistema"
 sudo apt update && sudo apt upgrade -y
 
-
-#configurando java
-echo "Verificando Java..."
-
-java -version #verifica versao atual do java
-
-if [ $? = 0 ]; #se retorno for igual a 0
-    
-    then #entao,
-        echo "Java instalado" #print no terminal
-
-    else #se nao,
-        echo "Java não instalado" #print no terminal
-        echo "Gostaria de instalar o java? [s/n]" #print no terminal
-        read get #variável que guarda resposta do usuário
-
-        if [ "$get" = "s" ]; #se retorno for igual a s
-
-            then #entao
-            sudo apt install openjdk-21-jre-headless -y #executa instalacao do java
-
-        fi #fecha o 2º if
-
-fi #fecha o 1º if
-
-
 #configurando docker
 echo "Verificando Docker..."
 
@@ -54,6 +28,37 @@ if [ $? = 0 ]; #se retorno for igual a 0
         fi #fecha o 2º if
 
 fi #fecha o 1º if
+
+
+#ativando servico do docker no s.o
+sudo systemctl start docker
+
+#habilitando docker para iniciar junto ao sistema
+sudo systemctl enable docker
+
+
+#configurando banco de dados
+echo "Configurando banco de dados..."
+if [ "$(sudo docker ps -a -q -f name=ContainerDB)" ]; then
+
+    echo "Container já existe. Iniciando..."
+    sudo docker start ContainerDB
+
+else
+
+    #criando o container mysql
+    echo "Criando novo container MySQL..."
+    sudo docker pull mysql
+    sudo docker run -d -p 3306:3306 --name ContainerDB -e "MYSQL_DATABASE=dbMobilitech" -e "MYSQL_ROOT_PASSWORD=urubu100" mysql
+
+fi
+
+echo "Copiando script sql para dentro do container"
+sudo docker cp mobilitech.sql ContainerDB:/tmp/mobilitech.sql
+
+#acessando o bash do container e executando o mysql
+echo "Executando script sql"
+sudo docker exec -i ContainerDB mysql -u root -pUrubu100 dbMobilitech < mobilitech.sql
 
 #configurando mobilitech
 echo "Clonando repositório..."
