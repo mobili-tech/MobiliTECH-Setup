@@ -52,7 +52,7 @@ else
 fi
 
 # Aguardando MySQL subir
-until sudo docker exec ContainerDB mysqladmin ping -h "localhost" -u root -pUrubu100 --silent; do
+until sudo docker exec ContainerDB mysqladmin ping -h "localhost" -u root -purubu100 --silent; do
     echo "Aguardando MySQL subir..."
     sleep 3
 done
