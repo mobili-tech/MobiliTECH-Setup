@@ -53,6 +53,11 @@ else
 
 fi
 
+until sudo docker exec ContainerDB mysqladmin ping -h "localhost" -u root -pUrubu100 --silent; do
+    echo "Aguardando MySQL subir..."
+    sleep 3
+done
+
 echo "Copiando script sql para dentro do container"
 sudo docker cp mobilitech.sql ContainerDB:/tmp/mobilitech.sql
 
