@@ -36,8 +36,7 @@ sudo systemctl start docker
 #habilitando docker para iniciar junto ao sistema
 sudo systemctl enable docker
 
-
-#configurando banco de dados
+# Configurando banco de dados
 echo "Configurando banco de dados..."
 if [ "$(sudo docker ps -a -q -f name=ContainerDB)" ]; then
 
@@ -46,24 +45,25 @@ if [ "$(sudo docker ps -a -q -f name=ContainerDB)" ]; then
 
 else
 
-    #criando o container mysql
-    echo "Criando novo container MySQL..."
+    echo "📦 Criando novo container MySQL..."
     sudo docker pull mysql
     sudo docker run -d -p 3306:3306 --name ContainerDB -e "MYSQL_DATABASE=dbMobilitech" -e "MYSQL_ROOT_PASSWORD=urubu100" mysql
 
 fi
 
+# Aguardando MySQL subir
 until sudo docker exec ContainerDB mysqladmin ping -h "localhost" -u root -pUrubu100 --silent; do
     echo "Aguardando MySQL subir..."
     sleep 3
 done
 
-echo "Copiando script sql para dentro do container"
+# Copiando e executando script SQL
+echo "Copiando script SQL para o container..."
 sudo docker cp mobilitech.sql ContainerDB:/tmp/mobilitech.sql
 
-#acessando o bash do container e executando o mysql
-echo "Executando script sql"
-sudo docker exec -i ContainerDB mysql -u root -pUrubu100 dbMobilitech < mobilitech.sql
+echo "Executando script SQL..."
+sudo docker exec ContainerDB \
+    sh -c "mysql -u root -pUrubu100 dbMobilitech < /tmp/mobilitech.sql"
 
 #configurando mobilitech
 echo "Clonando repositório..."
