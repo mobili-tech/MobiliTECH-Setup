@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#variaveis
+export ROOT_PASSWORD="urubu100"
+
 echo "Iniciando configuração de ambiente..."
 
 echo "Atualizando os pacotes do sistema"
@@ -47,12 +50,12 @@ else
 
     echo "Criando novo container MySQL..."
     sudo docker pull mysql
-    sudo docker run -d -p 3306:3306 --name ContainerDB -e "MYSQL_DATABASE=dbMobilitech" -e "MYSQL_ROOT_PASSWORD=urubu100" mysql
+    sudo docker run -d -p 3306:3306 --name ContainerDB -e MYSQL_DATABASE=dbMobilitech -e MYSQL_ROOT_PASSWORD="$ROOT_PASSWORD" mysql
 
 fi
 
 # Aguardando MySQL subir
-until sudo docker exec ContainerDB mysqladmin ping -h "localhost" -u root -purubu100 --silent; do
+until sudo docker exec ContainerDB mysqladmin ping -h "localhost" -u root -p"$ROOT_PASSWORD" --silent; do
     echo "Aguardando MySQL subir..."
     sleep 3
 done
@@ -63,10 +66,20 @@ sudo docker cp mobilitech.sql ContainerDB:/tmp/mobilitech.sql
 
 echo "Executando script SQL..."
 sudo docker exec ContainerDB \
-    sh -c "mysql -u root -purubu100 dbMobilitech < /tmp/mobilitech.sql"
+    sh -c "mysql -u root -p$ROOT_PASSWORD dbMobilitech < /tmp/mobilitech.sql"
+
 
 #configurando mobilitech
 echo "Clonando repositório..."
-sudo docker pull moiseshbs/mobilitech:1.0
+if [ "$(sudo docker ps -a -q -f name=mobilitech)" ]; then
 
-sudo docker run -d -p 3333:3333 moiseshbs/mobilitech:1.0
+    echo "Container já existe. Iniciando..."
+    sudo docker start mobilitech
+
+else
+
+    echo "Criando um novo container MobiliTECH..."
+    sudo docker pull moiseshbs/mobilitech:1.0
+    sudo docker run -d --name mobilitech -p 3333:3333 moiseshbs/mobilitech:1.0
+
+fi
