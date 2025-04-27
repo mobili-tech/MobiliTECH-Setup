@@ -93,7 +93,26 @@ else
 fi
 
 #Configurando o ApachePOI.jar
-sudo apt install openjdk-21-jdk -y
+java --version #verifica versao atual do docker
+
+if [ $? = 0 ]; #se retorno for igual a 0
+    
+    then #entao,
+        echo "Java instalado" #print no terminal
+
+    else #se nao,
+        echo "Java não instalado" #print no terminal
+        echo "Gostaria de instalar o Java? [s/n]" #print no terminal
+        read get #variável que guarda resposta do usuário
+
+        if [ "$get" = "s" ]; #se retorno for igual a s
+
+            then #entao
+            sudo apt install openjdk-21-jdk -y #executa instalacao do java
+
+        fi #fecha o 2º if
+
+fi #fecha o 1º if
 
 read -p "Insira o AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
 
