@@ -1,6 +1,14 @@
 #!/bin/bash
 
-#variaveis
+#variaveis apachepoi.jar
+export AWS_ACCESS_KEY_ID=""
+export AWS_SECRET_ACCESS_KEY=""
+export AWS_SESSION_TOKEN=""
+export DB_HOST="jdbc:mysql://127.0.0.1:3306/mobilitech"
+export DB_PSWD="123456"
+export DB_USER="root"
+
+#variaveis DBcontainer
 export ROOT_PASSWORD="urubu100"
 
 echo "Iniciando configuração de ambiente..."
@@ -52,21 +60,21 @@ else
     sudo docker pull mysql
     sudo docker run -d -p 3306:3306 --name ContainerDB -e MYSQL_DATABASE=dbMobilitech -e MYSQL_ROOT_PASSWORD="$ROOT_PASSWORD" mysql
 
+    # Aguardando MySQL subir
+    until sudo docker exec ContainerDB mysqladmin ping -h "localhost" -u root -p"$ROOT_PASSWORD" --silent; do
+        echo "Aguardando MySQL subir..."
+        sleep 3
+    done
+
+    # Copiando e executando script SQL
+    echo "Copiando script SQL para o container..."
+    sudo docker cp mobilitech.sql ContainerDB:/tmp/mobilitech.sql
+
+    echo "Executando script SQL..."
+    sudo docker exec ContainerDB \
+        sh -c "mysql -u root -p$ROOT_PASSWORD dbMobilitech < /tmp/mobilitech.sql"
+
 fi
-
-# Aguardando MySQL subir
-until sudo docker exec ContainerDB mysqladmin ping -h "localhost" -u root -p"$ROOT_PASSWORD" --silent; do
-    echo "Aguardando MySQL subir..."
-    sleep 3
-done
-
-# Copiando e executando script SQL
-echo "Copiando script SQL para o container..."
-sudo docker cp mobilitech.sql ContainerDB:/tmp/mobilitech.sql
-
-echo "Executando script SQL..."
-sudo docker exec ContainerDB \
-    sh -c "mysql -u root -p$ROOT_PASSWORD dbMobilitech < /tmp/mobilitech.sql"
 
 
 #configurando mobilitech
@@ -83,3 +91,16 @@ else
     sudo docker run -d --name mobilitech -p 3333:3333 moiseshbs/mobilitech:1.0
 
 fi
+
+#Configurando o ApachePOI.jar
+read -p "Insira o AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
+
+read -p "Insira o AWS_SECRET_ACCESS_KEY" AWS_SECRET_ACCESS_KEY
+
+read -p "Insira o AWS_SESSION_TOKEN" AWS_SESSION_TOKEN
+
+export AWS_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY
+export AWS_SESSION_TOKEN
+
+java -DDB_HOST=jdbc:mysql://127.0.0.1:3306/mobilitech -DDB_USER=$DB_HOST -DDB_PSWD=$ROOT_PASSWORD -DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -DAWS_SESSION_TOKEN=$AWS_SESSION_TOKEN -jar ./ApachePOI.jar
