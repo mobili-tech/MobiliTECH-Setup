@@ -61,7 +61,7 @@ else
     sudo docker run -d -p 3306:3306 --name ContainerDB -e MYSQL_DATABASE=dbMobilitech -e MYSQL_ROOT_PASSWORD="$ROOT_PASSWORD" mysql
 
     # Aguardando MySQL subir
-    until sudo docker exec ContainerDB mysqladmin ping -h "localhost" -u root -p"$ROOT_PASSWORD" --silent; do
+    until sudo docker exec ContainerDB mysqladmin ping -h "127.0.0.1" -u root -p"$ROOT_PASSWORD" --silent; do
         echo "Aguardando MySQL subir..."
         sleep 3
     done
@@ -72,7 +72,7 @@ else
 
     echo "Executando script SQL..."
     sudo docker exec ContainerDB \
-        sh -c "mysql -u root -p$ROOT_PASSWORD dbMobilitech < /tmp/mobilitech.sql"
+        sh -c "mysql -h "localhost" -u root -p$ROOT_PASSWORD dbMobilitech < /tmp/mobilitech.sql"
 
 fi
 
