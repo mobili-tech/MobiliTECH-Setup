@@ -87,8 +87,8 @@ if [ "$(sudo docker ps -a -q -f name=mobilitech)" ]; then
 else
 
     echo "Criando um novo container MobiliTECH..."
-    sudo docker pull moiseshbs/mobilitech:1.0
-    sudo docker run -d --name mobilitech -p 3333:3333 moiseshbs/mobilitech:1.0
+    sudo docker pull moiseshbs/mobilitech
+    sudo docker run -d --name mobilitech -p 3333:3333 moiseshbs/mobilitech
 
 fi
 
