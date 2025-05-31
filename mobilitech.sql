@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS log (
 
 CREATE TABLE IF NOT EXISTS empresa (
 	idEmpresa INT PRIMARY KEY AUTO_INCREMENT,
+    codVerificacao VARCHAR(5),
     cnpj CHAR(18),
     razaoSocial VARCHAR(45),
 	nomeFantasia VARCHAR(45),
@@ -41,35 +42,25 @@ CREATE TABLE IF NOT EXISTS empresa (
 );
 
 CREATE TABLE IF NOT EXISTS endereco (
-	idEndereco INT PRIMARY KEY,
-	Cep CHAR(9),
-	Numero CHAR(5),
-	Cidade VARCHAR(45),
-	Estado VARCHAR(45),
-	Logradouro VARCHAR(45),
-	Complemento VARCHAR(45),
-	fkEmpresa INT UNIQUE,
+	idEndereco INT PRIMARY KEY AUTO_INCREMENT,
+	cep CHAR(9),
+	numero CHAR(5),
+	cidade VARCHAR(45),
+	estado VARCHAR(45),
+	logradouro VARCHAR(45),
+	complemento VARCHAR(45),
+	fkEmpresa INT,
 	CONSTRAINT fkEndEmp FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
 ) AUTO_INCREMENT = 101;
 
 CREATE TABLE IF NOT EXISTS funcionarios (
-	idFuncionario INT PRIMARY KEY,
+	idFuncionario INT PRIMARY KEY AUTO_INCREMENT,
 	nome VARCHAR(45),
 	email VARCHAR(100),
 	cargo VARCHAR(45),
-	fkEmpresa INT UNIQUE,
+	fkEmpresa INT,
 	CONSTRAINT fkEmpFunc FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
 ) AUTO_INCREMENT = 301;
-
-CREATE TABLE IF NOT EXISTS linha (
-	idLinha INT PRIMARY KEY,
-	nome VARCHAR(45),
-	num VARCHAR(7),
-	qtdViagensIda INT,
-	qtdViagensVolta INT,
-	fkEmpresa INT UNIQUE,
-	CONSTRAINT fkEmpLinha FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
-) AUTO_INCREMENT = 401;
 
 CREATE TABLE IF NOT EXISTS veiculo (
 	idVeiculo INT PRIMARY KEY AUTO_INCREMENT,
@@ -79,19 +70,37 @@ CREATE TABLE IF NOT EXISTS veiculo (
 
 CREATE TABLE IF NOT EXISTS grupo (
 	idGrupo INT PRIMARY KEY AUTO_INCREMENT,
-	fkLinha INT,
-	fkVeiculo INT,
-	tipo VARCHAR(45),
-	CONSTRAINT fkGrupoLinha FOREIGN KEY (fkLinha) REFERENCES linha(idLinha),
-	CONSTRAINT fkGrupoVeiculo FOREIGN KEY (fkVeiculo) REFERENCES veiculo(idVeiculo)
+	tipo VARCHAR(45)
 );
 
+CREATE TABLE IF NOT EXISTS veiculoEmpresa(
+	fkGrupo INT,
+    fkVeiculo INT,
+    fkEmpresa INT,
+	CONSTRAINT fkGrupoVeiculo FOREIGN KEY (fkGrupo) REFERENCES grupo(idGrupo),
+    CONSTRAINT fkVeiculoVeiculo FOREIGN KEY (fkVeiculo) REFERENCES veiculo(idVeiculo),
+    CONSTRAINT fkEmpresaVeiculo FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa),
+    PRIMARY KEY (fkGrupo, fkVeiculo, fkEmpresa)
+);
+
+CREATE TABLE IF NOT EXISTS linha (
+	idLinha INT PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(45),
+	num VARCHAR(7),
+	qtdViagensIda INT,
+	qtdViagensVolta INT,
+	fkEmpresa INT,
+    fkGrupo INT,
+	CONSTRAINT fkGrupoLinha FOREIGN KEY (fkGrupo) REFERENCES grupo(idGrupo),
+	CONSTRAINT fkEmpLinha FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
+) AUTO_INCREMENT = 401;
+
 CREATE TABLE IF NOT EXISTS registro (
-	idRegistro INT PRIMARY KEY,
+	idRegistro INT PRIMARY KEY auto_increment,
 	fkLinha INT,
 	fkEmpresa INT,
-	dtRegistro DATETIME,
-	qtdPassageiros INT,
+	dtRegistro DATETIME DEFAULT CURRENT_TIMESTAMP,
+	qtdPassageiros INT DEFAULT 0,
 	CONSTRAINT fkRegEmpresa FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa),
 	CONSTRAINT fkRegLinha FOREIGN KEY (fkLinha) REFERENCES linha(idLinha)
 ) AUTO_INCREMENT = 1000;
