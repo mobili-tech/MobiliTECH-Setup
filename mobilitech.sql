@@ -8,18 +8,7 @@ CREATE TABLE IF NOT EXISTS transporte (
     lote CHAR(3),
     empresa TEXT,
     linha VARCHAR(255),
-    
-    passageiros_dinheiro INT,
-    passageiros_comum_vt INT,
-    passageiros_comum_m INT,
-    passageiros_estudante INT,
-    passageiros_estudante_mensal INT,
-    passageiros_vt_mensal INT,
-    passageiros_pagantes INT,
-    passageiros_integracao INT,
-    passageiros_gratuidade INT,
     passageiros_total INT,
-    
     partidas_ponto_inicial INT,
     partidas_ponto_final INT
 );
@@ -86,14 +75,13 @@ CREATE TABLE IF NOT EXISTS veiculoEmpresa(
 CREATE TABLE IF NOT EXISTS linha (
 	idLinha INT PRIMARY KEY AUTO_INCREMENT,
 	nome VARCHAR(45),
-	num VARCHAR(7),
 	qtdViagensIda INT,
 	qtdViagensVolta INT,
 	fkEmpresa INT,
     fkGrupo INT,
 	CONSTRAINT fkGrupoLinha FOREIGN KEY (fkGrupo) REFERENCES grupo(idGrupo),
 	CONSTRAINT fkEmpLinha FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
-) AUTO_INCREMENT = 401;
+);
 
 CREATE TABLE IF NOT EXISTS registro (
 	idRegistro INT PRIMARY KEY auto_increment,
@@ -103,4 +91,5 @@ CREATE TABLE IF NOT EXISTS registro (
 	qtdPassageiros INT DEFAULT 0,
 	CONSTRAINT fkRegEmpresa FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa),
 	CONSTRAINT fkRegLinha FOREIGN KEY (fkLinha) REFERENCES linha(idLinha)
-) AUTO_INCREMENT = 1000;
+);
+
