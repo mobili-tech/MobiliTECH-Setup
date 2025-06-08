@@ -88,7 +88,7 @@ else
 
     echo "Criando um novo container MobiliTECH..."
     sudo docker pull moiseshbs/mobilitech:latest
-    docker pull calace/mobilitechapachepoi:latest
+    sudo docker pull calace/mobilitechapachepoi:latest
     sudo docker run -d --name mobilitech -p 3333:3333 moiseshbs/mobilitech:latest
 
 fi
@@ -121,8 +121,8 @@ read -p "Insira o AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
 
 read -p "Insira o AWS_SESSION_TOKEN: " AWS_SESSION_TOKEN
 
-#export AWS_ACCESS_KEY_ID
-#export AWS_SECRET_ACCESS_KEY
-#export AWS_SESSION_TOKEN
+export AWS_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY
+export AWS_SESSION_TOKEN
 
-#java -DDB_HOST=jdbc:mysql://127.0.0.1:3306/dbMobilitech -DDB_USER=$DB_USER -DDB_PSWD=$ROOT_PASSWORD -DAWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -DAWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -DAWS_SESSION_TOKEN=$AWS_SESSION_TOKEN -jar ./ApachePOI.jar
+sudo docker run --name mobilitechapachepoi calace/mobilitechapachepoi:latest
