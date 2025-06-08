@@ -121,9 +121,9 @@ read -p "Insira o AWS_SECRET_ACCESS_KEY: "AWS_SECRET_ACCESS_KEY
 
 read -p "Insira o AWS_SESSION_TOKEN: "AWS_SESSION_TOKEN
 
-sudo export AWS_ACCESS_KEY_ID
-sudo export AWS_SECRET_ACCESS_KEY
-sudo export AWS_SESSION_TOKEN
+export AWS_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY
+export AWS_SESSION_TOKEN
 
 sudo docker run \
   --name mobilitechapachepoi \
