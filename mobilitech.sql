@@ -22,30 +22,18 @@ CREATE TABLE IF NOT EXISTS log (
 
 CREATE TABLE IF NOT EXISTS empresa (
 	idEmpresa INT PRIMARY KEY AUTO_INCREMENT,
-    codVerificacao VARCHAR(5),
-    cnpj CHAR(18),
+    codVerificacao VARCHAR(5) UNIQUE,
+    cnpj CHAR(18) UNIQUE,
     razaoSocial VARCHAR(45),
 	nomeFantasia VARCHAR(45),
-	email VARCHAR(45),
+	email VARCHAR(45) UNIQUE,
 	senha VARCHAR(25)
 );
 
-CREATE TABLE IF NOT EXISTS endereco (
-	idEndereco INT PRIMARY KEY AUTO_INCREMENT,
-	cep CHAR(9),
-	numero CHAR(5),
-	cidade VARCHAR(45),
-	estado VARCHAR(45),
-	logradouro VARCHAR(45),
-	complemento VARCHAR(45),
-	fkEmpresa INT,
-	CONSTRAINT fkEndEmp FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
-) AUTO_INCREMENT = 101;
-
-CREATE TABLE IF NOT EXISTS funcionarios (
+CREATE TABLE IF NOT EXISTS funcionario (
 	idFuncionario INT PRIMARY KEY AUTO_INCREMENT,
 	nome VARCHAR(45),
-	email VARCHAR(100),
+	email VARCHAR(100) UNIQUE,
 	cargo VARCHAR(45),
 	fkEmpresa INT,
 	CONSTRAINT fkEmpFunc FOREIGN KEY (fkEmpresa) REFERENCES empresa(idEmpresa)
@@ -93,3 +81,17 @@ CREATE TABLE IF NOT EXISTS registro (
 	CONSTRAINT fkRegLinha FOREIGN KEY (fkLinha) REFERENCES linha(idLinha)
 );
 
+-- Inserindo veículos
+INSERT INTO veiculo (tipo, capacidade) VALUES
+('Ônibus Articulado', 40),
+('Miniônibus', 26),
+('Ônibus Convencional', 34),
+('Ônibus Biarticulado', 60),
+('Ônibus Padron', 40),
+('Ônibus Trolébus', 40);
+
+-- Inserindo grupos
+INSERT INTO grupo (tipo) VALUES
+("GRUPO ARTICULACAO"),
+("GRUPO DE DISTRIBUICAO"),
+("GRUPO ESTRUTURAL");
