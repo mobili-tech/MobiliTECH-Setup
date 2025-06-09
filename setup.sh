@@ -4,6 +4,7 @@
 export AWS_ACCESS_KEY_ID=""
 export AWS_SECRET_ACCESS_KEY=""
 export AWS_SESSION_TOKEN=""
+export SLACK_WEBHOOK=""
 export DB_HOST="jdbc:mysql://127.0.0.1:3306/dbMobilitech"
 export DB_PSWD="urubu100"
 export DB_USER="root"
