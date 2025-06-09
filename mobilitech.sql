@@ -50,6 +50,12 @@ CREATE TABLE IF NOT EXISTS grupo (
 	tipo VARCHAR(45)
 );
 
+CREATE TABLE IF NOT EXISTS notificacoesSlack (
+    id INT AUTO_INCREMENT PRIMARY KEY,  
+    descricao TEXT NOT NULL,            
+    data_insert TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
+);
+
 CREATE TABLE IF NOT EXISTS veiculoEmpresa(
 	fkGrupo INT,
     fkVeiculo INT,
