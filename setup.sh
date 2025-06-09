@@ -121,4 +121,4 @@ if [ $? = 0 ]; #se retorno for igual a 0
         fi #fecha o 2º if
 
 fi #fecha o 1º if
-sudo docker run --name mobilitechapachepoi --network rede-mobilitech -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" -e AWS_SESSION_TOKEN="$AWS_SESSION_TOKEN" calace/mobilitechapachepoi:latest
+sudo docker run --name mobilitechapachepoi --network rede-mobilitech -e SLACK_WEBHOOK="$SLACK_WEBHOOK" -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" -e AWS_SESSION_TOKEN="$AWS_SESSION_TOKEN" calace/mobilitechapachepoi:latest
