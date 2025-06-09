@@ -13,7 +13,7 @@ export ROOT_PASSWORD="urubu100"
 
 echo "Iniciando configuração de ambiente..."
 
-if [ "$(docker ps -q -f name=mobilitechapachepoi)" ]; then
+if [ "$(sudo docker ps -f name=mobilitechapachepoi)" ]; then
     sudo docker rm mobilitechapachepoi
 fi
 
