@@ -13,6 +13,10 @@ export ROOT_PASSWORD="urubu100"
 
 echo "Iniciando configuração de ambiente..."
 
+if [ "$(docker ps -q -f name=mobilitechapachepoi)" ]; then
+    sudo docker rm mobilitechapachepoi
+fi
+
 echo "Atualizando os pacotes do sistema"
 sudo apt update && sudo apt upgrade -y
 
