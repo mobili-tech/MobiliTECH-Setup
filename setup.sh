@@ -47,6 +47,8 @@ sudo systemctl start docker
 #habilitando docker para iniciar junto ao sistema
 sudo systemctl enable docker
 
+docker network create rede-mobilitech
+
 # Configurando banco de dados
 echo "Configurando banco de dados..."
 if [ "$(sudo docker ps -a -q -f name=ContainerDB)" ]; then
@@ -58,7 +60,7 @@ else
 
     echo "Criando novo container MySQL..."
     sudo docker pull mysql
-    sudo docker run -d -p 3306:3306 --name ContainerDB -e MYSQL_DATABASE=dbMobilitech -e MYSQL_ROOT_PASSWORD="$ROOT_PASSWORD" mysql
+    sudo docker run -d -p 3306:3306 --name ContainerDB --network rede-mobilitech -e MYSQL_DATABASE=dbMobilitech -e MYSQL_ROOT_PASSWORD="$ROOT_PASSWORD" mysql
 
     # Aguardando MySQL subir
     until sudo docker exec ContainerDB mysqladmin ping -h "127.0.0.1" -u root -p"$ROOT_PASSWORD" --silent; do
@@ -114,15 +116,4 @@ if [ $? = 0 ]; #se retorno for igual a 0
         fi #fecha o 2º if
 
 fi #fecha o 1º if
-
-export AWS_ACCESS_KEY_ID
-export AWS_SECRET_ACCESS_KEY
-export AWS_SESSION_TOKEN
-
-sudo docker run \
-  --name mobilitechapachepoi \
-  -e AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID\
-  -e AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY\
-  -e AWS_SESSION_TOKEN=AWS_SESSION_TOKEN\
-  calace/mobilitechapachepoi:latest
-
+sudo docker run --name mobilitechapachepoi --network rede-mobilitech -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" -e AWS_SESSION_TOKEN="$AWS_SESSION_TOKEN" calace/mobilitechapachepoi:latest
