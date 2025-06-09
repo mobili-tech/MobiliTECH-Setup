@@ -47,7 +47,7 @@ sudo systemctl start docker
 #habilitando docker para iniciar junto ao sistema
 sudo systemctl enable docker
 
-docker network create rede-mobilitech
+sudo docker network create rede-mobilitech
 
 # Configurando banco de dados
 echo "Configurando banco de dados..."
